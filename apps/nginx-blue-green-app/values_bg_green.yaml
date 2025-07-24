@@ -1,0 +1,10 @@
+# Green deployment values
+color: "#00FF00"  # Green color
+
+resources:
+  limits:
+    cpu: 150m
+    memory: 160Mi
+  requests:
+    cpu: 150m
+    memory: 160Mi

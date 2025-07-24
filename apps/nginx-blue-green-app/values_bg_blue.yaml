@@ -1,0 +1,10 @@
+# Blue deployment values
+color: "#0000FF"  # Blue color
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
