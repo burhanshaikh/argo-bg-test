@@ -14,7 +14,7 @@ spec:
       - list:  # List generator: Defines the 5 stores for this brand
           elements:
           - app: nginx-blue-green-app
-            namespace: default
+            namespace: argo-bg-test
       - list:  # List generator: Defines the 5 stores for this brand
           elements:
           - store: blue
