@@ -5,7 +5,7 @@ image:
   repository: nginx
   pullPolicy: IfNotPresent
   # Override the image tag by specifying a value for appVersion in Chart.yaml
-  tag: ""
+  tag: "stable"
 
 color: "#FF0000" # Red color
 
