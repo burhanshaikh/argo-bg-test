@@ -1,24 +1,24 @@
-# apiVersion: argoproj.io/v1alpha1               # Create a rollout resource
-# kind: Rollout
-# metadata:
-#   name: colorapp
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: mylivecolorapp
-#   workloadRef:                                 # Reference an existing Deployment using workloadRef field
-#     apiVersion: apps/v1
-#     kind: Deployment
-#     name: colorapp
-#     scaleDown: never
-#   strategy:
-#     blueGreen:
-#       activeService: colorapp-service
-#       previewService: preview-colorapp-service
-#       autoPromotionEnabled: false
+apiVersion: argoproj.io/v1alpha1               # Create a rollout resource
+kind: Rollout
+metadata:
+  name: colorapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mylivecolorapp
+  workloadRef:                                 # Reference an existing Deployment using workloadRef field
+    apiVersion: apps/v1
+    kind: Deployment
+    name: colorapp
+    scaleDown: never
+  strategy:
+    blueGreen:
+      activeService: colorapp-service
+      previewService: preview-colorapp-service
+      autoPromotionEnabled: false
 
-# ---
+---
 
 apiVersion: apps/v1
 kind: Deployment
