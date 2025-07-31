@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: the-matrix
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - matrix:
+      generators:
+      - clusters:  # Cluster generator: Selects only the specific cluster by its unique label
+          selector:
+            matchLabels:
+              argocd.argoproj.io/secret-type: cluster
+              brand: "bg"  # Match the cluster's unique label
+              deploy-apps: "true"  # Match the cluster's unique label
+          values:
+            app: nginx-blue-green-app
+            brand: bg
+      - list:  # List generator: Defines the 5 stores for this brand
+          elements:
+          - store: blue
+            namespace: argo-bg-test
+          - store: green
+            namespace: argo-bg-test
+  template:
+    metadata:
+      name: '{{.values.brand}}-{{.values.app}}-{{.store}}'  # Generates names like your-app-brand1-store1
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/burhanshaikh/argo-bg-test.git
+        targetRevision: HEAD
+        path: apps/{{.values.app}}
+        helm:
+          valueFiles:
+          - values_bg.yaml
+          - values_{{.values.brand}}_{{.store}}.yaml  # Brand-specific values file
+      destination:
+        server: '{{.server}}'  # From the Cluster generator (the matched cluster)
+        namespace: '{{.namespace}}'  # Customize as needed
+

@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: handelnine-apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - list:
+      elements:
+      - appname: ninetribe
+        cluster_url: https://6A5B26235CB263C921EE0963F3BDDAD0.gr7.us-east-1.eks.amazonaws.com
+        app: nginx-blue-green-app
+        store: blue
+        namespace: argo-bg-test
+      - appname: ninetribe
+        cluster_url: https://6A5B26235CB263C921EE0963F3BDDAD0.gr7.us-east-1.eks.amazonaws.com
+        app: nginx-blue-green-app
+        store: green
+        namespace: argo-bg-test
+  template:
+    metadata:
+      name: '{{.app}}-{{.store}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/burhanshaikh/argo-bg-test.git
+        targetRevision: HEAD
+        path: apps/{{.app}}/
+        helm:
+          valueFiles:
+          - values_bg.yaml
+          - values_bg_{{.store}}.yaml
+      destination:
+        server: '{{.cluster_url}}'  # Default server URL, can be customized
+        namespace: '{{.namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true

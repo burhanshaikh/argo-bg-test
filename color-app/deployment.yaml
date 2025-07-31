@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: colorapp
+  labels:
+    app: colorapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mylivecolorapp
+  template:
+    metadata:
+      labels:
+        app: mylivecolorapp
+    spec:
+      containers:
+      - name: mylivecolorapp
+        image: kirbah/blue-green:blue
+        ports:
+        - containerPort: 8080

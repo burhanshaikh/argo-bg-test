@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ninetribe-apps
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - matrix:
+      generators:
+      - clusters:  # Cluster generator: Selects only the specific cluster by its unique label
+          selector:
+            matchLabels:
+              argocd.argoproj.io/secret-type: cluster
+              brand: "ninetribe"  # Match the cluster's unique label
+              deploy-apps: "true"  # Match the cluster's unique label
+          values:
+            app: nginx-blue-green-app
+            brand: ninetribe
+            namespace: my-test-namespace
+      - list:  # List generator: Defines the 5 stores for this brand
+          elements:
+          - store: uk
+          - store: ch
+  template:
+    metadata:
+      name: '{{.values.brand}}-{{.store}}-{{.values.app}}'  # Generates names like ninetribe-uk-website-frontend
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/burhanshaikh/argo-bg-test.git
+        targetRevision: HEAD
+        path: apps/{{.values.app}}
+        helm:
+          valueFiles:
+          - values_bg.yaml
+          - values_{{.values.brand}}_{{.store}}.yaml  # Brand-specific values file
+      destination:
+        server: '{{.server}}'  # From the Cluster generator (the matched cluster)
+        namespace: '{{.values.namespace}}'
+
