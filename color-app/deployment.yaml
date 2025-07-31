@@ -38,6 +38,6 @@ spec:
     spec:
       containers:
       - name: mylivecolorapp
-        image: kirbah/blue-green:green
+        image: kirbah/blue-green:blue
         ports:
         - containerPort: 8080
