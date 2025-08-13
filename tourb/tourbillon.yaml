@@ -24,7 +24,7 @@ spec:
       source:
         repoURL: https://github.com/burhanshaikh/argo-bg-test.git
         targetRevision: main
-        path: nginx
+        path: nginx/test-nginx
         helm:
           #releaseName: tourbillon
           valueFiles:
