@@ -1,0 +1,4 @@
+apiVersion: v2
+name: test-nginx
+description: A Helm chart for deploying a single replica nginx server
+version: 0.1.0
