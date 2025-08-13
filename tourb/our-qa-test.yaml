@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: our-qa-test
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - clusters:  # Cluster generator: Selects only the specific cluster by its unique label
+      selector:
+        matchLabels:
+          argocd.argoproj.io/secret-type: cluster
+          brand: "qa"  # Match the cluster's unique label in the cluster secret resource
+          deploy-apps: "true"  # Match the cluster's unique label in the cluster secret resource
+      values:
+        app: backend
+        brand: ninetribe
+        namespace: default
+  template:
+    metadata:
+      name: qa-sidekiq  # Generates names like your-app-brand1-store1
+    spec:
+      project: default
+      source:
+        repoURL: git@gitlab.com:handelnine-internal1/gitops-infra-apps.git
+        targetRevision: SPR-5476-dev
+        path: apps/sidekiq
+        helm:
+          releaseName: sidekiq
+          valueFiles:
+          - values/qa/values_qa.yaml
+      destination:
+        server: '{{.server}}'  # From the Cluster generator (the matched cluster)
+        namespace: '{{.values.namespace}}'  # Customize as needed
+      syncPolicy:
+        automated: {}
