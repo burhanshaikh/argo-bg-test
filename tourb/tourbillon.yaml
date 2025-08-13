@@ -26,7 +26,7 @@ spec:
         targetRevision: main
         path: apps/nginx-blue-green-app
         helm:
-          releaseName: tourbillon
+          #releaseName: tourbillon
           valueFiles:
           - values_bg.yaml
           - values_bg_blue.yaml
