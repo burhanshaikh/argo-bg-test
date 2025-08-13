@@ -5,6 +5,17 @@ metadata:
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
+  generators:
+  - clusters:  # Cluster generator: Selects only the specific cluster by its unique label
+      selector:
+        matchLabels:
+          argocd.argoproj.io/secret-type: cluster
+          brand: "qa"  # Match the cluster's unique label in the cluster secret resource
+          deploy-apps: "true"  # Match the cluster's unique label in the cluster secret resource
+      values:
+        app: backend
+        brand: ninetribe
+        namespace: ninetribe
   template:
     metadata:
       name: my-nginx  # Generates names like your-app-brand1-store1
