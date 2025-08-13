@@ -24,12 +24,11 @@ spec:
       source:
         repoURL: https://github.com/burhanshaikh/argo-bg-test.git
         targetRevision: main
-        path: apps/nginx-blue-green-app
+        path: nginx
         helm:
           #releaseName: tourbillon
           valueFiles:
-          - values_bg.yaml
-          - values_bg_blue.yaml
+          - values.yaml
       destination:
         server: '{{.server}}'  # From the Cluster generator (the matched cluster)
         namespace: '{{.values.namespace}}'  # Customize as needed
